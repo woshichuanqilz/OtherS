@@ -1,0 +1,1 @@
+Taskkill /F /FI "imagename ne explorer.exe" /FI "imagename ne dwm.exe"

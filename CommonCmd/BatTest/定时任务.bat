@@ -1,0 +1,1 @@
+schtasks /create /sc minute /mo 30 /tn "Shut CMD Down" /tr "taskkill /f /t /im  cmd.exe"
