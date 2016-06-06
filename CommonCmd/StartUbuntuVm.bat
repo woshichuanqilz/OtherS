@@ -1,1 +1,1 @@
-"D:\ProgramFiles\VMWare\vmrun.exe" start "K:\Ubuntu\Ubuntu 64.vmx"
+"D:\ProgramFiles\VMWare\vmrun.exe" start "G:\Ubuntu\Ubuntu 64.vmx"
