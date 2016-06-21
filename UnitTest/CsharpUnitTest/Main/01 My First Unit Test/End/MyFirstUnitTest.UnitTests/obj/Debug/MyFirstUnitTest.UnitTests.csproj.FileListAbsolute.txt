@@ -1,0 +1,8 @@
+g:\GitCode\UnitTestingExamples\Main\01 My First Unit Test\End\MyFirstUnitTest.UnitTests\bin\Debug\ExerciseOne.UnitTests.dll
+g:\GitCode\UnitTestingExamples\Main\01 My First Unit Test\End\MyFirstUnitTest.UnitTests\bin\Debug\ExerciseOne.UnitTests.pdb
+g:\GitCode\UnitTestingExamples\Main\01 My First Unit Test\End\MyFirstUnitTest.UnitTests\bin\Debug\ExerciseOne.Code.dll
+g:\GitCode\UnitTestingExamples\Main\01 My First Unit Test\End\MyFirstUnitTest.UnitTests\bin\Debug\Microsoft.VisualStudio.QualityTools.UnitTestFramework.dll
+g:\GitCode\UnitTestingExamples\Main\01 My First Unit Test\End\MyFirstUnitTest.UnitTests\bin\Debug\ExerciseOne.Code.pdb
+g:\GitCode\UnitTestingExamples\Main\01 My First Unit Test\End\MyFirstUnitTest.UnitTests\obj\Debug\MyFirstUnitTest.UnitTests.csprojResolveAssemblyReference.cache
+g:\GitCode\UnitTestingExamples\Main\01 My First Unit Test\End\MyFirstUnitTest.UnitTests\obj\Debug\ExerciseOne.UnitTests.dll
+g:\GitCode\UnitTestingExamples\Main\01 My First Unit Test\End\MyFirstUnitTest.UnitTests\obj\Debug\ExerciseOne.UnitTests.pdb
