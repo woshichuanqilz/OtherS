@@ -6,6 +6,7 @@
 	--- 2391748 ws
 	--- 2391760 testserever ws
 	--- 2393697
+	--- 2392570 -- 1424912
 use qptreasuredb
 go	
 declare @lastsigndaynum int
@@ -19,13 +20,12 @@ set @lastsignday = DATEADD(Day,@delayday,GETDATE())
 set @lastsigndaynum = 1
 set @IsVIP = 0
 
-update qptreasuredb.dbo.SignLog Set LastSignDay=@lastsignday, LastSignDayNum=@lastsigndaynum, ExtraBonusSignedDay = 2
-, IsSignInInterrupt = 0, RewardType = 1
- where Userid in (select userid from qpaccountsdb.dbo.AccountsInfo where GameID = 2391788)
+update qptreasuredb.dbo.SignLog Set LastSignDay=@lastsignday, LastSignDayNum=@lastsigndaynum --, ExtraBonusSignedDay = 2, IsSignInInterrupt = 0, RewardType = 1
+ where Userid in (select userid from qpaccountsdb.dbo.AccountsInfo where GameID = 2392570)
  
 select * from qptreasuredb.dbo.SignLog where UserID in
 (
-select userid from qpaccountsdb.dbo.AccountsInfo where GameID = 2391788  
+select userid from qpaccountsdb.dbo.AccountsInfo where GameID = 2392570  
 )
 
 
@@ -36,7 +36,7 @@ exec qptreasuredb.dbo.GSP_GP_QuerySignInInfo 1428656, @stroutput output
 -- DELETE signlog
 delete qptreasuredb.dbo.SignLog where UserID in
 (
-select userid from qpaccountsdb.dbo.AccountsInfo where GameID = 2396276  
+select * from qpaccountsdb.dbo.AccountsInfo where GameID = 2392570  
 )
 
 -- DELETE cannon config 
@@ -61,8 +61,9 @@ declare @stroutput nvarchar(127)
 exec qptreasuredb.dbo.GSP_GP_UserSignIn 1419819, 1,@stroutput output
 
  insert into qpaccountsdb.dbo.VipInfo(UserID, VipExp, VipLevel, EverydayGift, ChargeBack, Nullity)
- values(1428656,0,1,0,0,0)
- SELECT * FROM qpaccountsdb.dbo.VipInfo WHERE UserID = 1424170
+ values(1424903,0,1,0,0,0)
+
+ SELECT * FROM qpaccountsdb.dbo.VipInfo WHERE UserID = 1424912
  
  SELECT * FROM qptreasuredb.dbo.SignRewardConfig
  
