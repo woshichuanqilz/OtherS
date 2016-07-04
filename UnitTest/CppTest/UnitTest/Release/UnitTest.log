@@ -1,0 +1,5 @@
+﻿  unittest1.cpp
+g:\gitcode\others\unittest\cpptest\unittest\unittest1.cpp(14): error C2065: 'CppTest': undeclared identifier
+g:\gitcode\others\unittest\cpptest\unittest\unittest1.cpp(14): error C2146: syntax error: missing ';' before identifier 'cTest'
+g:\gitcode\others\unittest\cpptest\unittest\unittest1.cpp(14): error C2065: 'cTest': undeclared identifier
+g:\gitcode\others\unittest\cpptest\unittest\unittest1.cpp(16): error C3861: 'add': identifier not found

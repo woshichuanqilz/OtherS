@@ -1,2 +1,1 @@
-﻿  UnitTest.cpp
-  CppTest.vcxproj -> C:\Users\Administrator\Documents\Visual Studio 2015\Projects\CppTest\UnitTest\CppTest.dll
+﻿LINK : fatal error LNK1104: cannot open file 'Microsoft.VisualStudio.TestTools.CppUnitTestFramework.lib'

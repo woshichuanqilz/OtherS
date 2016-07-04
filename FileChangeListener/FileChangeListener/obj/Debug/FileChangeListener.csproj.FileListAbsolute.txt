@@ -1,0 +1,6 @@
+c:\users\administrator\documents\visual studio 2015\Projects\FileChangeListener\FileChangeListener\bin\Debug\FileChangeListener.exe.config
+c:\users\administrator\documents\visual studio 2015\Projects\FileChangeListener\FileChangeListener\bin\Debug\FileChangeListener.exe
+c:\users\administrator\documents\visual studio 2015\Projects\FileChangeListener\FileChangeListener\bin\Debug\FileChangeListener.pdb
+c:\users\administrator\documents\visual studio 2015\Projects\FileChangeListener\FileChangeListener\obj\Debug\FileChangeListener.csprojResolveAssemblyReference.cache
+c:\users\administrator\documents\visual studio 2015\Projects\FileChangeListener\FileChangeListener\obj\Debug\FileChangeListener.exe
+c:\users\administrator\documents\visual studio 2015\Projects\FileChangeListener\FileChangeListener\obj\Debug\FileChangeListener.pdb
