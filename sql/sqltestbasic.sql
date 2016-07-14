@@ -47,3 +47,17 @@ SET @strPassPortID = null
 	BEGIN
 		print @strPassPortID + 'xixi'
 	END 
+
+	SELECT * FROM QPPlatformDB.dbo.GameRoomInfo WHERE serverid = 309
+
+UPDATE QPPlatformDB.dbo.GameRoomInfo SET serverid = 356 WHERE serverid = 309 
+
+
+SELECT * FROM QPTreasureDB.dbo.gamescoreinfo WHERE 
+userid in
+(SELECT UserID FROM QPAccountsDB.dbo.)
+
+update QPPlatformDB.dbo.GameRoomInfo
+SET servicemachine = '340A55C285AC3B9EAD1ED0885F98AB5D'
+WHERE servername in 
+('新手房', '百炮房', '千炮房', '万炮房')
