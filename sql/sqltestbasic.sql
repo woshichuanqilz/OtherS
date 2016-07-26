@@ -1,11 +1,89 @@
 
+--SELECT nickname,IsAndroid FROM QPAccountsDB.dbo.accountsinfo where RegisterMachine = '' -- like '%---%'
+SELECT  NickName, RegisterMachine, RegisterIP  FROM QPAccountsDB.dbo.accountsinfo where nickname like '%livetest%'
+SELECT * FROM QPAccountsDB.dbo.accountsinfo where nickname = 'livetest4'
+update QPAccountsDB.dbo.accountsinfo SET RegisterIP = '192.168.1.4' where userid in 
+(SELECT top 8 UserID  FROM QPAccountsDB.dbo.accountsinfo where nickname like '%livetest%')
 
-UPDATE QPTreasureDB.dbo.gamescoreinfo SET score = 1000000 WHERE userid in 
-(SELECT UserID FROM QPAccountsDB.dbo.accountsinfo where gameid = 2392744)
+-----
+SELECT count(*)  FROM QPAccountsDB.dbo.accountsinfo where RegisterIP = '192.168.1.4' 
+begin tran mytran
+
+-- remain 8 row info register ip
+DELETE QPAccountsDB.dbo.accountsinfo where userid in 
+(SELECT UserID FROM QPAccountsDB.dbo.accountsinfo
+WHERE UserID not in  
+(SELECT top 8 UserID FROM QPAccountsDB.dbo.accountsinfo where RegisterIP = '192.168.1.4' order by UseriD)
+AND RegisterIP = '192.168.1.4')
+
+-- remain 8 row info machine id 
+DELETE QPAccountsDB.dbo.accountsinfo WHERE UserID in
+(SELECT UserID FROM QPAccountsDB.dbo.accountsinfo
+WHERE UserID not in  
+(SELECT top 8 UserID FROM QPAccountsDB.dbo.accountsinfo where RegisterMachine = '6C9B51B76E854B8F915B77D7816A8BD9' order by UseriD)
+AND RegisterMachine = '6C9B51B76E854B8F915B77D7816A8BD9')
+
+WAITFOR DELAY '00:02';
+SELECT count(*)  FROM QPAccountsDB.dbo.accountsinfo where RegisterIP = '192.168.1.4' 
+rollback tran mytran
+
+SELECT count(*)  FROM QPAccountsDB.dbo.accountsinfo where RegisterIP = '192.168.1.4' 
+
+--SELECT * FROM QPAccountsDB.dbo.accountsinfo where nickname like '%livetest6%'
 
 
-SELECT * FROM QPPlatformDB.dbo.GameRoomInfo
-SELECT * FROM qpplatformdb.dbo.fishstock WHERE roomid = 315
+
+----------------
+SELECT RegisterMachine FROM QPAccountsDB.dbo.accountsinfo 
+SELECT top 1 * FROM QPAccountsDB.dbo.accountsinfo 
+-- duplicated line test
+WITH cte AS (
+  SELECT name , age, gender,  
+     row_number() OVER(PARTITION BY name, age ORDER BY name) AS [rn]
+  FROM name
+)
+
+DELETE cte WHERE [rn] > 1
+
+
+-- duplicate register
+DECLARE @countx INT
+SELECT @countx=count(*) FROM QPAccountsDB.dbo.accountsinfo where RegisterIP = '60.5.62.2'
+print 'hello world here'
+print convert(varchar(20), @countx)
+
+SELECT top 1 * FROM QPAccountsDB.dbo.accountsinfo 
+--------------------
+SELECT * FROM QPTreasureDB.dbo.NumConfig
+SELECT * FROM QPAccountsDB.dbo.accountsinfo where nickname like '%livetest29%'
+
+
+-----------------------algorithm--------
+UPDATE QPTreasureDB.dbo.gamescoreinfo SET score = 100000 WHERE userid in 
+(SELECT
+ --*,  
+UserID
+ FROM QPAccountsDB.dbo.accountsinfo where gameid in (2387014, 2392994, 2393012, 2393011, 2393062))
+
+ delete QPTreasureDB.dbo.GameScoreLocker -- where UserID in 
+ (SELECT
+ --*,  
+UserID
+ FROM QPAccountsDB.dbo.accountsinfo where gameid in (2387014, 2392994))
+
+ -- 5 accelaroter 6 san she 
+
+ UPDATE QPAccountsDB.dbo.backpack SET item5 = 1000, item6 =1000 
+ (SELECT
+ --*,  
+UserID
+ FROM QPAccountsDB.dbo.accountsinfo where gameid = 2387014)
+
+----------------------------------------
+
+ UPDATE QPTreasureDB.[dbo].[UserItem] SET count = 0 WHERE type in (122,123,124,125) AND userid = 2387014
+--SELECT * FROM QPPlatformDB.dbo.GameRoomInfo
+--SELECT * FROM qpplatformdb.dbo.fishstock WHERE roomid = 315
 
 --DELETE qpplatformdb.dbo.GameRoomInfo WHERE serverid = 359
 -- phone fee
@@ -27,12 +105,13 @@ SELECT * FROM qpplatformdb.dbo.fishstock WHERE roomid = 315
 --select datalength(@str) as datalength长度, len( @str ) as len长度
 
 --SELECT UserID, PassPortID, len(RTRIM(PassPortID)) AS PassportIDLen FROM QPAccountsDB.dbo.accountsinfo WHERE len(RTRIM(PassPortID)) < 18 or PassPortID = null
-update QPAccountsDB.dbo.accountsinfo SET PassPortID = 12345
+update QPAccountsDB.dbo.accountsinfo SET PassPortID = '12345'
 WHERE userid in 
 (
-SELECT UserID
+SELECT UserID --, PassPortID
 FROM QPAccountsDB.dbo.accountsinfo WHERE  PassPortID is null or PassPortID = ''
 )
+
 
 --- register
 Declare	@strErrorDescribe NVARCHAR(127)		-- 输出信息
@@ -47,17 +126,3 @@ SET @strPassPortID = null
 	BEGIN
 		print @strPassPortID + 'xixi'
 	END 
-
-	SELECT * FROM QPPlatformDB.dbo.GameRoomInfo WHERE serverid = 309
-
-UPDATE QPPlatformDB.dbo.GameRoomInfo SET serverid = 356 WHERE serverid = 309 
-
-
-SELECT * FROM QPTreasureDB.dbo.gamescoreinfo WHERE 
-userid in
-(SELECT UserID FROM QPAccountsDB.dbo.)
-
-update QPPlatformDB.dbo.GameRoomInfo
-SET servicemachine = '340A55C285AC3B9EAD1ED0885F98AB5D'
-WHERE servername in 
-('新手房', '百炮房', '千炮房', '万炮房')
