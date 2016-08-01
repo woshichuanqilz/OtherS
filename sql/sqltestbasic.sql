@@ -1,3 +1,78 @@
+-- get the current ip address 
+SELECT  
+   CONNECTIONPROPERTY('net_transport') AS net_transport,
+   CONNECTIONPROPERTY('protocol_type') AS protocol_type,
+   CONNECTIONPROPERTY('auth_scheme') AS auth_scheme,
+   CONNECTIONPROPERTY('local_net_address') AS local_net_address,
+   CONNECTIONPROPERTY('local_tcp_port') AS local_tcp_port,
+   CONNECTIONPROPERTY('client_net_address') AS client_net_address 
+----------------------------------------
+	SELECT *
+	from QPTreasureDB.dbo.NumConfig(nolock) as uk WHERE numtype = 6
+
+
+select UserCount from qpaccountsdb.dbo.AccountsInfo(nolock) where UserID = 1425459
+UPDATE qpaccountsdb.dbo.AccountsInfo SET UserCount = 1 where UserID = 1425459
+exec QPTreasureDB.dbo.GSP_GR_GetDftAlgoData 1425459
+----
+-- restrict duplicated accounts
+SELECT * FROM QPAccountsDB.dbo.accountsinfo where gameid = 2393152
+SELECT * FROM  QPTreasureDB.dbo.UserItem 
+	WHERE UserID = 1457098 AND [type] = 126
+
+SELECT * FROM QPAccountsDB.dbo.localtestmachineinfo
+--121.24.27.50
+-----------------------algorithm--------
+UPDATE QPTreasureDB.dbo.gamescoreinfo SET score = 100000 WHERE userid in 
+(SELECT
+ --*,  
+UserID
+ FROM QPAccountsDB.dbo.accountsinfo where gameid in (2387014, 2392994, 2393012, 2393011, 2393062, 2393152))
+
+ UPDATE QPTreasureDB.[dbo].[UserItem] SET count = 0 WHERE type in (122,123,124,125) AND userid in 
+ (
+SELECT Userid FROM QPAccountsDB.dbo.accountsinfo where gameid in (2387014, 2392994, 2393012, 2393011, 2393062, 2393152)
+ )
+
+
+
+UPDATE QPAccountsDB.dbo.Backpack SET item6 = 1000 WHERE UserID in
+(SELECT
+ --*,  
+UserID
+ FROM QPAccountsDB.dbo.accountsinfo where gameid in (2387014, 2392994, 2393012, 2393011, 2393062, 2393152))
+
+
+ 
+-- unlock duplicated accounts
+--SELECT * FROM QPAccountsDB.dbo.accountsinfo where gameid = 2447207
+--SELECT count(*) FROM qpaccountsdb.dbo.accountsinfo WHERE registerip = '121.24.31.3'
+--SELECT count(*) FROM qpaccountsdb.dbo.accountsinfo WHERE RegisterMachine = 'B85AA4BD9CFE49FE8C44253573994066'
+
+-- É¢Éä
+UPDATE QPAccountsDB.dbo.Backpack SET item6 = 1000 WHERE UserID = @dwUserID 
+
+---------------
+if exists (SELECT * FROM QPAccountsDB.dbo.localtestmachineinfo WHERE LocalTestMachineIP = 'B85AA4BD9CFE49FE8C44253573994066')
+BEGIN
+	print 'xixi'
+END 
+
+else
+BEGIN
+	print 'hehe'
+END 
+--------------------------------------------- unlock duplicated accounts
+SELECT * FROM QPAccountsDB.dbo.accountsinfo where gameid = 2393162
+SELECT count(*) FROM qpaccountsdb.dbo.accountsinfo WHERE registerip = '121.24.31.3'
+SELECT count(*) FROM qpaccountsdb.dbo.accountsinfo WHERE RegisterMachine = 'B85AA4BD9CFE49FE8C44253573994066'
+
+
+UPDATE QPTreasureDB.dbo.UserItem 
+	SET [guidtag1] = 1, [guidtag2] = 1, [guidtag3] = 10, isgamepreload = 1 
+	WHERE UserID = 1478222 AND [type] = 126
+
+
 
 --SELECT nickname,IsAndroid FROM QPAccountsDB.dbo.accountsinfo where RegisterMachine = '' -- like '%---%'
 SELECT  NickName, RegisterMachine, RegisterIP  FROM QPAccountsDB.dbo.accountsinfo where nickname like '%livetest%'
@@ -31,7 +106,29 @@ SELECT count(*)  FROM QPAccountsDB.dbo.accountsinfo where RegisterIP = '192.168.
 
 --SELECT * FROM QPAccountsDB.dbo.accountsinfo where nickname like '%livetest6%'
 
+	DECLARE @SameIPCnt INT
+	DECLARE @SameMachineIDCnt INT
+	SELECT @SameIPCnt = count(*) FROM QPAccountsDB.dbo.accountsinfo where  RegisterIP = @strClientIP AND IsAndroid = 0
+	SELECT @SameMachineIDCnt = count(*) FROM QPAccountsDB.dbo.accountsinfo where  RegisterIP = @strClientIP AND IsAndroid = 0
 
+	-- guid1 = bIsDuplicatedReg , 
+	-- guid2 = bIsTestAccount , 
+	-- guid3 = Percent Divisor, 
+	-- final hit fish probility will be Normal Percent divied / guid3;
+	if (@SameIPCnt >= 10) or (@SameMachineIDCnt >= 10)
+	BEGIN
+		IF NOT EXISTS (SELECT * FROM QPTreasureDB.dbo.UserItem(NOLOCK) WHERE UserID = @UserID AND [type] = 126)
+		BEGIN
+			INSERT QPTreasureDB.dbo.UserItem ([type], [count], [maxcount], [userid], [guidtag1], [guidtag2], [guidtag3], [guidtag4], source, subsource, isgamepreload, flag)
+			VALUES (126, 0, 0, @UserID, 1, 0, 10, 0, 0, 0, 1, 0)
+		END
+		else
+		BEGIN
+			UPDATE QPTreasureDB.dbo.UserItem 
+				SET [guidtag1] = 1, [guidtag2] = 0, [guidtag3] = 10, isgamepreload = 1 
+				WHERE UserID = @UserID AND [type] = 126
+		END
+	END
 
 ----------------
 SELECT RegisterMachine FROM QPAccountsDB.dbo.accountsinfo 
@@ -63,13 +160,13 @@ UPDATE QPTreasureDB.dbo.gamescoreinfo SET score = 100000 WHERE userid in
 (SELECT
  --*,  
 UserID
- FROM QPAccountsDB.dbo.accountsinfo where gameid in (2387014, 2392994, 2393012, 2393011, 2393062))
+ FROM QPAccountsDB.dbo.accountsinfo where gameid in (2387014, 2392994, 2393012, 2393011, 2393062, 2393152))
 
- delete QPTreasureDB.dbo.GameScoreLocker -- where UserID in 
+ delete QPTreasureDB.dbo.GameScoreLocker  where UserID in 
  (SELECT
  --*,  
 UserID
- FROM QPAccountsDB.dbo.accountsinfo where gameid in (2387014, 2392994))
+ FROM QPAccountsDB.dbo.accountsinfo where gameid in (2387014, 2392994,2393152))
 
  -- 5 accelaroter 6 san she 
 
@@ -81,7 +178,19 @@ UserID
 
 ----------------------------------------
 
- UPDATE QPTreasureDB.[dbo].[UserItem] SET count = 0 WHERE type in (122,123,124,125) AND userid = 2387014
+SELECT * FROM QPTreasureDB.[dbo].[UserItem]  WHERE type in (122,123,124,125) AND userid in 
+ (
+SELECT Userid FROM QPAccountsDB.dbo.accountsinfo where gameid = 2387014 
+ )
+
+ SELECT userid , count  FROM QPTreasureDB.[dbo].[UserItem]  WHERE type in (122) 
+
+
+ UPDATE QPTreasureDB.[dbo].[UserItem] SET count = 0 WHERE type in (122,123,124,125) AND userid in 
+ (
+SELECT Userid FROM QPAccountsDB.dbo.accountsinfo where gameid = 2393152 
+ )
+
 --SELECT * FROM QPPlatformDB.dbo.GameRoomInfo
 --SELECT * FROM qpplatformdb.dbo.fishstock WHERE roomid = 315
 
