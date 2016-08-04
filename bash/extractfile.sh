@@ -8,8 +8,9 @@ folder="./logfolder/"
 
 
 awk  '{ a[$7]++ } END { for (b in a) { print b } }' *.log > UserID.txt
+sed -ri "s/^/UserID /g" UserID.txt
 while IFS='' read -r line || [[ -n "$line" ]]; do
-    filename="$folder$line$ext"
+    filename="UserID $folder$line$ext"
     echo "file name is: $filename"
     grep -E $line *.log  > $filename
 done < UserID.txt
