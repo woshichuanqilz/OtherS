@@ -1,7 +1,7 @@
 @echo off
 
-set _task=GameServer_clown1.exe
-set _svr=g:\WorkCode\lele2-20160222_for_autostart\运行\Release\Ansi\GameServer_clown1.exe
+set _task=GameServer_100.exe
+set _svr=.\GameServer_100.exe
 set _des=start.bat
 
 :checkstart
@@ -12,9 +12,9 @@ for /f "tokens=1" %%n in ('tasklist ^| findstr "%_task%" ') do (
  
 
 :startsvr
-echo %time% 
+echo %date%%time% 
 echo ********程序开始启动********
-echo 程序重新启动于 %time% ,请检查系统日志 >> restart_service.txt
+echo 程序重新启动于 %date%%time% ,请检查系统日志 >> restart_service.txt
 echo start %_svr% > %_des%
 echo exit >> %_des%
 start %_des%
@@ -29,7 +29,7 @@ goto checkstart
 
 
 :checkag
-echo %time% 程序运行正常,10秒后继续检查.. 
+echo %date%%time% 程序运行正常,10秒后继续检查.. 
 echo Wscript.Sleep WScript.Arguments(0) >%tmp%\delay.vbs 
 cscript //b //nologo %tmp%\delay.vbs 10000 
 goto checkstart
