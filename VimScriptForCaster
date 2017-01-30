@@ -1,0 +1,103 @@
+#
+# This file is a command-module for Dragonfly.
+# (c) Copyright 2008 by Christo Butcher
+# Licensed under the LGPL, see <http://www.gnu.org/licenses/>
+
+"""
+Command-module for Vim
+
+"""
+#---------------------------------------------------------------------------
+
+from dragonfly import (Grammar, AppContext, Dictation, Mouse, Key, Repeat, Text)
+
+from caster.lib import control
+from caster.lib import settings
+from caster.lib.dfplus.additions import IntegerRefST
+from caster.lib.dfplus.merge import gfilter
+from caster.lib.dfplus.merge.mergerule import MergeRule
+from caster.lib.dfplus.state.short import R
+
+
+class VIMRule(MergeRule):
+    # def EditOperation(Op, Rg, Cnt):
+        # if Op == "copy":
+            # CmdOp = "y"
+        # elif Op == "delete"
+            # CmdOp = "d"
+        # else Op == "select"
+            # CmdOp = "v"
+
+   
+    pronunciation = "vim"
+
+    mapping = {
+            "append":                      R(Key("escape, A"), rdescript="close tab"),
+            "comment":                     R(Key("comma,c,c"), rdescript="comment"),
+            "close":                       R(Text(":x\n"), rdescript="close tab"),
+            "close other tab":             R(Text(":tabo"), rdescript="close other tab"),
+            "close other window":          R(Text(":on"), rdescript="close other window"),
+            "left [<n>]":                  R(Key("h"), rdescript="close tab") * Repeat(extra="n"),
+            "delete [<n>] line":           R(Key("d,d"), rdescript="vim: delete line") * Repeat(extra="n"),
+            "delete content":              R(Key("escape") + Text("ctt"), rdescript="vim: delete line") * Repeat(extra="n"),
+            "down [<n>]":                  R(Key("j"), rdescript="Atom: Move Cursor Up #") * Repeat(extra="n"),
+            "file list":                   R(Text(":NERDTree\n"), rdescript="file list"),
+            "search [<text>]":             R(Key("slash") + Text("%(text)s\n"), rdescript="find text"),
+            "find [<text>]":               R(Key("escape,f") + Text("%(text)s\n"), rdescript="find text"),
+            "find backward [<text>]":      R(Key("escape,F") + Text("%(text)s\n"), rdescript="find text"),
+            "repeat [<n>]":                R(Key("dot"), rdescript="Atom: Move Cursor Up #") * Repeat(extra="n"),
+            "go back":                     R(Key("a-a"), rdescript="go back"),
+            "go forward":                  R(Key("a-d"), rdescript="go forward"),
+            "[go to] file begin":          R(Key("escape,g,g"), rdescript="go forward"),
+            "[go to] file end":            R(Key("escape,G"), rdescript="go forward"),
+            "[(go|jump) to] tab <n>":      R(Key("escape,%(n)d,g,t"), rdescript="go tab"),
+            "[(go|jump) to] line <n>":     R(Key("escape, %(n)d,G"), rdescript="go to line"),
+
+            "insert down":                 R(Key("o"), rdescript="vim: Preview In Browser"),
+            "insert up":                   R(Key("O"), rdescript="vim: Preview In Browser"),
+            "insert":                      R(Key("i"), rdescript="vim: Preview In Browser"),
+            "forward  [<n>] word":         R(Text("w"), rdescript="next tab") * Repeat(extra="n"),
+            "backward [<n>] word":         R(Text("b"), rdescript="next tab") * Repeat(extra="n"),
+            "new tab":                     R(Text(":tabnew\n"), rdescript="new tab") * Repeat(extra="n"),
+            "(normal|escape)":             R(Key("escape"), rdescript="Enter normal mode"),
+            "(previous|left) tab [<n>]":   R(Text(":tabprev\n"), rdescript="previous tab") * Repeat(extra="n"),
+            "(next|right) tab [<n>]":      R(Text(":tabnext\n"), rdescript="next tab") * Repeat(extra="n"),
+            "up [<n>]":                    R(Key("k"), rdescript="Atom: Move Cursor Up #") * Repeat(extra="n"),
+            "uppercase first letter":      R(Text(":call UpperCaseFirstLetter()\n"), rdescript="Uppercase First Letter"),
+            "(recover|recovery)":          R(Key("escape, u"), rdescript="Uppercase First Letter"),
+            "VIM RC":                      R(Text(":call EditVimrc()\n"),   rdescript="start vimrc file"),
+            "visual":                      R(Key("v"), rdescript="Atom: Move Cursor Up #"),
+            "select current line":         R(Key("V"), rdescript="Atom: Move Cursor Up #"),
+            "select [<n>] line":           R(Key("V,%(n)d,j,k"), rdescript="Atom: Move Cursor Up #"),
+            "(select|visual) paragraph":            R(Key("v,p"), rdescript="Atom: Move Cursor Up #"),
+            "delete paragraph":            R(Key("d,p"), rdescript="Atom: Move Cursor Up #"),
+            "copy [<n>] line":             R(Key("%(n)d,y,y"), rdescript="Erase Multi Clipboard"),
+            "copy [<n>] word":             R(Key("y,%(n)d,w"), rdescript="Erase Multi Clipboard"),
+            "copy paragraph":              R(Key("escape,y,p"), rdescript="Atom: Move Cursor Up #"),
+            "run (the|this) file":         R(Key("comma,r,r"), rdescript="Run the file"),
+            # "delete paragraph":         R(Key("escape,d,p"), rdescript="Atom: Move Cursor Up #"),
+            # "select paragraph":         R(Key("escape,v,p"), rdescript="Atom: Move Cursor Up #"),
+
+            # requires function list plug-in:
+        }
+    extras = [
+              Dictation("text"),
+              # Integer("n", 1, 1000),
+              IntegerRefST("n", 1, 1000),
+              IntegerRefST("n2", 1, 10),
+             ]
+    defaults = {"n": 1}
+
+#---------------------------------------------------------------------------
+
+context = AppContext(executable="gvim")
+grammar = Grammar("vim", context=context)
+
+if settings.SETTINGS["apps"]["vim"]:
+    if settings.SETTINGS["miscellaneous"]["rdp_mode"]:
+        control.nexus().merger.add_global_rule(VIMRule())
+    else:
+        rule = VIMRule(name="vim")
+        gfilter.run_on(rule)
+        grammar.add_rule(rule)
+        grammar.load()
