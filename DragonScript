@@ -1,0 +1,98 @@
+from dragonfly import (Grammar, Playback, Key, Dictation, Function, BringApp, Text)
+from dragonfly.actions.action_waitwindow import WaitWindow
+
+from caster.lib import control
+from caster.lib import utilities, settings
+from caster.lib.dfplus.additions import IntegerRefST
+from caster.lib.dfplus.merge import gfilter
+from caster.lib.dfplus.merge.mergerule import MergeRule
+from caster.lib.dfplus.state.short import R
+
+
+_NEXUS = control.nexus()
+
+def fix_dragon_double(nexus):
+    try:
+        lr = nexus.history[len(nexus.history) - 1]
+        lu = " ".join(lr)
+        Key("left/5:" + str(len(lu)) + ", del").execute()
+    except Exception:
+        utilities.simple_log(False)
+
+WebDict = {'youtube': "https://www.youtube.com/feed/history"}
+def OpenWeb(WebName):
+    BringApp("C:/Users/Administrator/AppData/Local/Google/Chrome/Application/chrome.exe", WebDict[Key])
+
+
+class DragonRule(MergeRule):
+    pronunciation = "dragon"
+
+    mapping = {
+        'search':                       R(Playback([(["search", "the", "web", "for"], 0.0)]), rdescript="Dragon: Go To Sleep"),
+        '(lock Dragon | deactivate)':   R(Playback([(["go", "to", "sleep"], 0.0)]), rdescript="Dragon: Go To Sleep"),
+        '(number|numbers) mode':        R(Playback([(["numbers", "mode", "on"], 0.0)]), rdescript="Dragon: Number Mode"),
+        'spell mode':                   R(Playback([(["spell", "mode", "on"], 0.0)]), rdescript="Dragon: Spell Mode"),
+        'dictation mode':               R(Playback([(["dictation", "mode", "on"], 0.0)]), rdescript="Dragon: Dictation Mode"),
+        'normal mode':                  R(Playback([(["normal", "mode", "on"], 0.0)]), rdescript="Dragon: Normal Mode"),
+        'com on':                       R(Playback([(["command", "mode", "on"], 0.0)]), rdescript="Dragon: Command Mode (On)"),
+        'com off':                      R(Playback([(["command", "mode", "off"], 0.0)]), rdescript="Dragon: Command Mode (Off)"),
+        'scratch':                      R(Playback([(["scratch", "that"], 0.0)]), rdescript="Dragon: 'Scratch That'"),
+        "(reboot|restart) dragon":                R(Function(utilities.reboot), rdescript="Reboot Dragon Naturallyspeaking"),
+        "fix dragon double":            R(Function(fix_dragon_double, nexus=_NEXUS), rdescript="Fix Dragon Double Letter"),
+        "left point":                   R(Playback([(["MouseGrid"], 0.1), (["four", "four"], 0.1), (["click"], 0.0)]), rdescript="Mouse: Left Point"),
+        "right point":                  R(Playback([(["MouseGrid"], 0.1), (["six", "six"], 0.1), (["click"], 0.0)]), rdescript="Mouse: Right Point"),
+        "center point":                 R(Playback([(["MouseGrid"], 0.1), (["click"], 0.0)]), rdescript="Mouse: Center Point"),
+# My Add Lizhe
+# Open Program
+        "open altrun":                  R(Key("a-w"), rdescript="open altrun"),
+        # "open altrun":                  R(Key("a-w"), rdescript="open altrun"),
+        "open evernote":                R(Key("ca-e"), rdescript="open evernote"),
+        "open slack":                   R(BringApp(r"C:/Users/Administrator/AppData/Local/slack/slack.exe"), rdescript="open slack"),
+        "open editor":                  R(Key("ca-z"), rdescript="open vim"),
+        "open wechat":                  R(BringApp(r"D:/Program files/WeChat/WeChat.exe"), rdescript="open vim"),
+        "open wonder list":             R(Key(r"a-backtick"), rdescript="Wunder List"),
+        "go [<text>]":                  R(Key(r"a-w") + Text("%(text)s\n"), rdescript="Quick start"),
+
+# Music ###################
+        "(music go|start music)":                     R(BringApp("D:/SyncProgram/foobar2000/foobar2000.exe", "/play"), rdescript="music"),
+        "toggle music":                 R(BringApp("D:/SyncProgram/foobar2000/foobar2000.exe", "/pause"), rdescript="music"),
+        "next music":                   R(BringApp("D:/SyncProgram/foobar2000/foobar2000.exe", "/next"), rdescript="music"),
+        "previous music":               R(BringApp("D:/SyncProgram/foobar2000/foobar2000.exe", "/prev"), rdescript="music"),
+# Evernote
+        "save note":                    R(Key("ca-n"), rdescript="music"),
+        "search note":                  R(Key("ca-f"), rdescript="seach note"),
+        # "screen capture":               R(Key(""), rdescript="seach note"),
+
+# window operatiol
+
+# Open website
+        # "open website <WebName>":       R(Function(OpenWeb,extra = {"WebName"}), rdescript="seach note"),
+        "open website <webname>":         R(Function(OpenWeb, extra ={"webname"}), rdescript="Spell"),
+        # "[<big>] <letter>": R(Function(alphanumeric.letters2, extra ={"big", "letter"}), rdescript="Spell"),
+
+# Translate
+        "translation":                  R(BringApp(r"D:/Program files/Dict/YodaoDict.exe") + WaitWindow(r"D:/Program files/Dict/YodaoDict.exe", timeout=2) + Key("c-v"), rdescript="translation"),
+
+# global press
+        "ok":                           R(Key("enter"), rdescript="press enter"),
+        "cancel":                       R(Key("escape"), rdescript="press esc"),
+
+        "volume up":                    R(Key("cas-equal"), rdescript="press esc"),
+        "volume down":                  R(Key("cas-hyphen"), rdescript="press esc"),
+        }
+    extras = [
+              Dictation("text"),
+              Dictation("mim"),
+              IntegerRefST("n", 1, 1000),
+             ]
+    defaults = {"n": 1, "mim":""}
+
+#---------------------------------------------------------------------------
+
+grammar = Grammar("Dragon Naturallyspeaking")
+
+if settings.SETTINGS["apps"]["dragon"] and not settings.WSR:
+    rule = DragonRule(name="dragon")
+    gfilter.run_on(rule)
+    grammar.add_rule(rule)
+    grammar.load()
